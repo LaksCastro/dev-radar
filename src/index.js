@@ -6,7 +6,8 @@ const routes = require("./routes");
 
 mongo.connect(process.env.DB_URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 });
 
 app.use(express.json());

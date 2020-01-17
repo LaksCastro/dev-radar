@@ -6,7 +6,9 @@ const parseStringAsArray = require("../utils/parseStringAsArray");
 module.exports = {
     async store(req, res) {
         try {
-            const { github_username, techs, longitude, latitude } = req.body;
+            let { github_username } = req.body;
+            github_username = github_username.toLowerCase();
+            const { techs, longitude, latitude } = req.body;
 
             const devExists = await Dev.findOne({ github_username });
             if (devExists) return res.json(devExists);

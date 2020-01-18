@@ -1,10 +1,14 @@
 import React from 'react';
-
-import * as S from '@/components/ContentItem/styles';
+import api from '@/services/api';
+import * as S from './styles';
 
 export default function ContentItem({
-  user: { avatar_url, name, github_username, techs, bio },
+  dev: { avatar_url, name, github_username, techs, bio, _id },
 }) {
+  //temp function
+  async function testeDpsDeleta() {
+    await api.delete('/devs/' + _id);
+  }
   return (
     <S.ContentItemContainer>
       <S.MainContent>
@@ -12,11 +16,25 @@ export default function ContentItem({
           <img src={avatar_url} alt={`Avatar Developer: ${name}`} />
           <div>
             <strong>{name}</strong>
-            <p>{techs.toString().replace(/,/g, ', ')}</p>
+            <p>
+              {techs.map((tech, i) => {
+                return i === techs.length - 1
+                  ? tech
+                      .substring(0, 1)
+                      .toUpperCase()
+                      .concat(tech.substring(1))
+                  : `${tech
+                      .substring(0, 1)
+                      .toUpperCase()
+                      .concat(tech.substring(1))}, `;
+              })}
+            </p>
           </div>
         </S.ContentHeader>
         <S.ContentBody>
-          <p>{bio}</p>
+          <S.ContentBio light={bio === null}>
+            {bio ? bio : 'Este usuário não tem nada a dizer...'}
+          </S.ContentBio>
         </S.ContentBody>
       </S.MainContent>
       <S.ContentLink>
@@ -28,6 +46,7 @@ export default function ContentItem({
           Confira este perfil no GitHub
         </S.ContentLinkToGithub>
       </S.ContentLink>
+      <button onClick={testeDpsDeleta}>del</button>
     </S.ContentItemContainer>
   );
 }

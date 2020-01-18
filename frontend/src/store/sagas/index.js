@@ -1,13 +1,11 @@
-import {
-  all,
-  // takeLatest,
-} from 'redux-saga/effects';
+import { all, takeLatest } from 'redux-saga/effects';
 
-// import { SessionTypes } from '../ducks/session';
-// import { getSessionRequest } from './session';
+import { Types as DevListTypes } from '../ducks/devList';
+import * as Dev from './dev';
 
 export default function* rootSaga() {
   yield all([
-    // takeLatest(SessionTypes.GET_SESSION_REQUEST, getSessionRequest),
+    takeLatest(DevListTypes.ASYNC_INDEX_DEVS, Dev.asyncIndexDevs),
+    takeLatest(DevListTypes.ASYNC_STORE_DEV, Dev.asyncStoreDev),
   ]);
 }

@@ -2,8 +2,10 @@ import styled from 'styled-components';
 import truncateString from '@/styles/truncateString';
 import colors from '@/styles/colors';
 
-export const ContentItemContainer = styled.article`
-  width: 100%;
+export const ContentItemContainer = styled.li`
+  min-width: 230px;
+  flex: 1;
+  margin: 4px;
 
   display: flex;
   flex-direction: column;
@@ -18,8 +20,7 @@ export const MainContent = styled.div``;
 
 export const ContentHeader = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
   width: 100%;
   img {
     width: 50px;
@@ -29,22 +30,21 @@ export const ContentHeader = styled.div`
     border-radius: 50%;
     border: 2px solid ${colors.primary};
     box-shadow: 0 2px 20px lightgrey;
-    margin-right: 12px;
+    margin-bottom: 0.5rem;
   }
   div {
-    padding-top: 12px;
+    width: 100%;
     display: block;
-    ${truncateString};
     strong {
       display: block;
       color: ${colors.darker};
-      ${truncateString};
       margin-bottom: 4px;
+      ${truncateString};
     }
     p {
       display: block;
-      ${truncateString};
       color: ${colors.regular};
+      ${truncateString};
     }
   }
 `;
@@ -52,12 +52,13 @@ export const ContentHeader = styled.div`
 export const ContentBody = styled.div`
   margin: 1rem 0;
   color: ${colors.dark};
-  p {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-  }
+`;
+export const ContentBio = styled.p`
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  color: ${(props) => (props.light ? colors.light : colors.darker)};
 `;
 export const ContentLink = styled.div`
   ${truncateString};

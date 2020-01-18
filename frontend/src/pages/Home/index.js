@@ -1,151 +1,55 @@
-import React from 'react';
-import * as S from '@/pages/Home/styles';
-import teste from '@/assets/images/teste.jpg';
+import React, { useEffect } from 'react';
 
+import { Types as TypesDevList } from '@/store/ducks/devList';
+import { useDispatch, useSelector } from 'react-redux';
+
+import * as S from './styles';
+
+import Toast from '@/utils/toast';
+
+import DevForm from '@/components/DevForm/index';
 import ContentItem from '@/components/ContentItem/index';
+import ContentLoader from '@/components/ContentLoader/index';
 
 function Home() {
-  function handleSubmit(data) {
-    console.log(data);
-  }
+  const dispatch = useDispatch();
+
+  const devs = useSelector((state) => state.devList);
+
+  useEffect(() => {
+    async function loadDevsData() {
+      dispatch({
+        type: TypesDevList.ASYNC_INDEX_DEVS,
+      });
+    }
+    loadDevsData();
+  }, [dispatch]);
+  useEffect(() => {
+    if (devs.error) Toast.error('Ocorreu um erro, tente novamente');
+  }, [devs.error]);
+
+  useEffect(() => {
+    if (!devs.data) return;
+
+    if (devs.data.filter((dev) => !dev.initialData).length)
+      Toast.success('Usuário cadastrado com sucesso');
+  }, [devs.data]);
+
   return (
     <S.AppWrapper>
       <S.AppContainer>
         <S.Aside>
-          <S.FormWrapper onSubmit={handleSubmit}>
-            <S.FormTitle>Cadastro</S.FormTitle>
-
-            <S.InputBlock>
-              <S.InputLabel>GitHub Username</S.InputLabel>
-              <S.InputWrapper
-                placeholder="LaksCastro"
-                required
-                type="text"
-                name="github_username"
-              />
-            </S.InputBlock>
-            <S.InputBlock>
-              <S.InputLabel>Technologies</S.InputLabel>
-              <S.InputWrapper
-                placeholder="ReactJs, JavaScript, NodeJs"
-                required
-                type="text"
-                name="techs"
-              />
-            </S.InputBlock>
-            <S.InputGroup>
-              <S.InputBlock>
-                <S.InputLabel>Longitude</S.InputLabel>
-                <S.InputWrapper required type="text" name="longitude" />
-              </S.InputBlock>
-              <S.InputBlock>
-                <S.InputLabel>Latitude</S.InputLabel>
-                <S.InputWrapper required type="text" name="latitude" />
-              </S.InputBlock>
-            </S.InputGroup>
-            <S.ButtonSave>Concluir</S.ButtonSave>
-          </S.FormWrapper>
+          <DevForm />
         </S.Aside>
         <S.Main>
           <S.ContentWrapper>
-            <ContentItem
-              user={{
-                avatar_url: teste,
-                name: 'Laks Castro',
-                github_username: 'lakscastro',
-                techs: ['ReactJs', 'JavaScript', 'NodeJs'],
-                bio: `Lorem Ipsum é simplesmente uma simulação de texto da indústria
-                  tipográfica e de impressos, e vem sendo utilizado desde o
-                  século XVI`,
-              }}
-            />
-            <ContentItem
-              user={{
-                avatar_url: teste,
-                name: 'Laks Castro',
-                github_username: 'lakscastro',
-                techs: ['ReactJs', 'JavaScript', 'NodeJs'],
-                bio: `Lorem Ipsum é simplesmente uma simulação de texto da indústria
-                  tipográfica e de impressos, e vem sendo utilizado desde o
-                  século XVI`,
-              }}
-            />
-            <ContentItem
-              user={{
-                avatar_url: teste,
-                name: 'Laks Castro',
-                github_username: 'lakscastro',
-                techs: ['ReactJs', 'JavaScript', 'NodeJs'],
-                bio: `Lorem Ipsum é simplesmente uma simulação de texto da indústria
-                  tipográfica e de impressos, e vem sendo utilizado desde o
-                  século XVI`,
-              }}
-            />
-            <ContentItem
-              user={{
-                avatar_url: teste,
-                name: 'Laks Castro',
-                github_username: 'lakscastro',
-                techs: ['ReactJs', 'JavaScript', 'NodeJs'],
-                bio: `Lorem Ipsum é simplesmente uma simulação de texto da indústria
-                  tipográfica e de impressos, e vem sendo utilizado desde o
-                  século XVI`,
-              }}
-            />
-            <ContentItem
-              user={{
-                avatar_url: teste,
-                name: 'Laks Castro',
-                github_username: 'lakscastro',
-                techs: ['ReactJs', 'JavaScript', 'NodeJs'],
-                bio: `Lorem Ipsum é simplesmente uma simulação de texto da indústria
-                  tipográfica e de impressos, e vem sendo utilizado desde o
-                  século XVI`,
-              }}
-            />
-            <ContentItem
-              user={{
-                avatar_url: teste,
-                name: 'Laks Castro',
-                github_username: 'lakscastro',
-                techs: ['ReactJs', 'JavaScript', 'NodeJs'],
-                bio: `Lorem Ipsum é simplesmente uma simulação de texto da indústria
-                  tipográfica e de impressos, e vem sendo utilizado desde o
-                  século XVI`,
-              }}
-            />
-            <ContentItem
-              user={{
-                avatar_url: teste,
-                name: 'Laks Castro',
-                github_username: 'lakscastro',
-                techs: ['ReactJs', 'JavaScript', 'NodeJs'],
-                bio: `Loreimpressos, e vem sendo utilizado desde o
-                  século XVI`,
-              }}
-            />
-            <ContentItem
-              user={{
-                avatar_url: teste,
-                name: 'Laks Castro',
-                github_username: 'lakscastro',
-                techs: ['ReactJs', 'JavaScript', 'NodeJs'],
-                bio: `Lorem Ipsum é simplesmente uma simulação de texto da indústria
-                  tipográfica e de impressos, e vem sendo utilizado desde o
-                  século XVI`,
-              }}
-            />
-            <ContentItem
-              user={{
-                avatar_url: teste,
-                name: 'Laks Castro',
-                github_username: 'lakscastro',
-                techs: ['ReactJs', 'JavaScript', 'NodeJs'],
-                bio: `Lorem Ipsum é simplesmente uma simulação de texto da indústria
-                  tipográfica e de impressos, e vem sendo utilizado desde o
-                  século XVI`,
-              }}
-            />
+            {devs.initializingData ? (
+              <ContentLoader />
+            ) : !devs.data.length ? (
+              <h1>nao ha nenhum user cadastrado</h1>
+            ) : (
+              devs.data.map((dev) => <ContentItem key={dev._id} dev={dev} />)
+            )}
           </S.ContentWrapper>
         </S.Main>
       </S.AppContainer>

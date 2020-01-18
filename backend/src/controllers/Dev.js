@@ -17,12 +17,6 @@ module.exports = {
                 `https://api.github.com/users/${github_username}`
             );
 
-            if (!response.data)
-                return res.status(400).json({
-                    code: "store/invalid-username",
-                    message: "This user not exists on Github"
-                });
-
             const { name = login, avatar_url, bio } = response.data;
             const techsArray = parseStringAsArray(techs);
             const location = {
@@ -30,7 +24,7 @@ module.exports = {
                 coordinates: [longitude, latitude]
             };
             const dev = await Dev.create({
-                name,
+                name: name ? name : github_username,
                 github_username,
                 bio,
                 avatar_url,
@@ -39,7 +33,7 @@ module.exports = {
             });
             return res.json(dev);
         } catch (error) {
-            return res.json(error);
+            return res.status(400).json(error);
         }
     },
     async index(req, res) {
@@ -47,7 +41,7 @@ module.exports = {
             const devs = await Dev.find();
             return res.json(devs);
         } catch (error) {
-            return res.json(error);
+            return res.status(400).json(error);
         }
     },
     async update(req, res) {
@@ -103,7 +97,7 @@ module.exports = {
 
             return res.json(updatedDev);
         } catch (error) {
-            return res.json(error);
+            return res.status(400).json(error);
         }
     },
     async destroy(req, res) {
@@ -114,7 +108,7 @@ module.exports = {
 
             return res.status(204).send();
         } catch (error) {
-            return res.json(error);
+            return res.status(400).json(error);
         }
     }
 };

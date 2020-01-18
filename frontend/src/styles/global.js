@@ -9,17 +9,22 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     outline: 0;
     padding: 0;
+    outline: none;
+    border: none;
+    font-family: 'Ubuntu', sans-serif !important;
+    text-decoration: none;
+  }
+  html, body, #root{
+    width: 100%;
+    height: 100%;
   }
   body {
     background-color: ${colors.background};
     text-rendering: optimizeLegibility !important;
     -webkit-font-smoothing: antialiased !important;
   }
-  body, input, textarea {
-    font-family: 'Ubuntu', sans-serif !important;
-  }
-  a, button {
-    outline: none;
+  img{
+    max-width: 100%;
   }
 
   /* Toast Notification */
@@ -29,7 +34,7 @@ const GlobalStyle = createGlobalStyle`
   .toast-notification-warning {
     display:flex;
     .toast-notification-body {
-      padding: 30px;
+      padding: 10px 20px;
       font-size: 14px;
 
       &:before {

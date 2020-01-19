@@ -1,14 +1,9 @@
 import React from 'react';
-import api from '@/services/api';
 import * as S from './styles';
 
 export default function ContentItem({
   dev: { avatar_url, name, github_username, techs, bio, _id },
 }) {
-  //temp function
-  async function testeDpsDeleta() {
-    await api.delete('/devs/' + _id);
-  }
   return (
     <S.ContentItemContainer>
       <S.MainContent>
@@ -46,7 +41,6 @@ export default function ContentItem({
           Confira este perfil no GitHub
         </S.ContentLinkToGithub>
       </S.ContentLink>
-      <button onClick={testeDpsDeleta}>del</button>
     </S.ContentItemContainer>
   );
 }

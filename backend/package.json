@@ -19,6 +19,7 @@
         "mongoose": "^5.8.7"
     },
     "devDependencies": {
+        "ngrok": "^3.2.7",
         "nodemon": "^2.0.2"
     },
     "config": {

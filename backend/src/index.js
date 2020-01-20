@@ -14,4 +14,21 @@ app.use(cors());
 app.use(express.json());
 app.use(routes);
 
-app.listen(process.env.PORT || 1111);
+app.listen(process.env.PORT);
+
+if (process.env.DEVELOPMENT) {
+    const ngrok = require("ngrok");
+    (async function() {
+        try {
+            const url = await ngrok.connect({
+                proto: "http",
+                addr: process.env.PORT
+            });
+            console.log("Tunnel Created -> ");
+            console.log(url);
+            console.log("Tunnel Inspector ->  http://127.0.0.1:4040");
+        } catch (error) {
+            console.log(error);
+        }
+    })();
+}

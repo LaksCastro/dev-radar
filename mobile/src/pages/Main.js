@@ -20,7 +20,8 @@ import {
 
 export default function MainScreen({ navigation }) {
     const [currentPosition, setCurrentPosition] = useState(null);
-    const [devs, setDevs] = useState(null);
+    const [techs, setTechs] = useState("");
+    const [devs, setDevs] = useState([]);
     useEffect(() => {
         async function loadInitialPosition() {
             const { granted } = await requestPermissionsAsync();
@@ -37,21 +38,44 @@ export default function MainScreen({ navigation }) {
                 });
             }
         }
-        async function loadDevs() {
-            try {
-                const response = await api.get("/devs");
-                setDevs(response.data);
-            } catch (error) {
-                console.log(error);
-            }
-        }
         loadInitialPosition();
-        loadDevs();
     }, []);
-    if (!currentPosition || !devs) return null;
+    useEffect(() => {
+        if (techs.length) loadDevs();
+    }, [currentPosition]);
+
+    async function loadDevs() {
+        try {
+            const { latitude, longitude } = currentPosition;
+            const response = await api.get("/search", {
+                params: {
+                    latitude,
+                    longitude,
+                    techs
+                }
+            });
+            setDevs(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function handleRegionChanged(region) {
+        setCurrentPosition(region);
+    }
+
+    function handleOpenProfile(github_username) {
+        const url = `https://github.com/${github_username}`;
+        navigation.navigate("Profile", {
+            url
+        });
+    }
+
+    if (!currentPosition) return null;
     return (
         <>
             <MapView
+                onRegionChangeComplete={handleRegionChanged}
                 initialRegion={currentPosition}
                 style={styles.MapContainer}
             >
@@ -69,7 +93,12 @@ export default function MainScreen({ navigation }) {
                                 uri: dev.avatar_url
                             }}
                         />
-                        <Callout style={styles.DevCard}>
+                        <Callout
+                            style={styles.DevCard}
+                            onPress={() =>
+                                handleOpenProfile(dev.github_username)
+                            }
+                        >
                             <Text style={styles.DevName}>
                                 {dev.name || dev.github_username}
                             </Text>
@@ -90,12 +119,17 @@ export default function MainScreen({ navigation }) {
             </MapView>
             <View style={styles.TechsForm}>
                 <TextInput
+                    value={techs}
+                    onChangeText={text => setTechs(text)}
                     style={styles.TechsInput}
                     placeholder="Procurar Devs por Techs..."
                     placeholderColorText="#777"
                 />
 
-                <TouchableOpacity style={styles.TechsSubmitButton}>
+                <TouchableOpacity
+                    onPress={loadDevs}
+                    style={styles.TechsSubmitButton}
+                >
                     <MaterialIcons name="my-location" size={20} color="#fff" />
                 </TouchableOpacity>
             </View>

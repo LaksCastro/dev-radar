@@ -1,17 +1,13 @@
 import React from "react";
+import { StyleSheet } from "react-native";
+import { WebView } from "react-native-webview";
 
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+export default function Profile({ navigation }) {
+    const url = navigation.getParam("url");
 
-export default function ProfileScreen({ navigation }) {
-    return <View style={styles.ProfileContainer}></View>;
+    return <WebView style={styles.GitHubPage} source={{ uri: url }} />;
 }
 
 const styles = StyleSheet.create({
-    ProfileContainer: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        paddingLeft: 20,
-        paddingRight: 20
-    }
+    GitHubPage: { flex: 1 }
 });

@@ -1,9 +1,14 @@
 require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
-const app = express();
 const mongo = require("mongoose");
+const http = require("http");
 const routes = require("./routes");
+const { setupWebSocket } = require("./websocket");
+
+const app = express();
+const server = http.Server(app);
+setupWebSocket(server);
 
 mongo.connect(process.env.DB_URL, {
     useNewUrlParser: true,
@@ -14,8 +19,9 @@ app.use(cors());
 app.use(express.json());
 app.use(routes);
 
-app.listen(process.env.PORT);
+server.listen(process.env.PORT);
 
+//Create a tunnel in development
 if (process.env.DEVELOPMENT) {
     const ngrok = require("ngrok");
     (async function() {

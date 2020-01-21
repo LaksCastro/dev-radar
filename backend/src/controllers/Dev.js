@@ -1,6 +1,6 @@
 const github_api = require("../services/github");
 const Dev = require("../models/Dev");
-
+const { filterConnections, sendMessage } = require("../websocket");
 const parseStringAsArray = require("../utils/parseStringAsArray");
 
 module.exports = {
@@ -31,6 +31,13 @@ module.exports = {
                 techs: techsArray,
                 location
             });
+
+            const sendSocketMessageTo = filterConnections(
+                { latitude, longitude },
+                techsArray
+            );
+            sendMessage(sendSocketMessageTo, "newdev", dev);
+
             return res.json(dev);
         } catch (error) {
             return res.status(400).json(error);
